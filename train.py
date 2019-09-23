@@ -1,6 +1,8 @@
 import functools
 import os
 
+from dummy_dataset import DummyDataset
+
 
 print = functools.partial(print, flush=True)
 
@@ -27,6 +29,15 @@ else:
 def main():
     init_epoch = 0
     max_epoch = 20190923
+
+    train_data_set, val_data_set = prepare_data_sets()
+
+
+def prepare_data_sets():
+    train_data_set = DummyDataset(True, 256)
+    test_data_set = DummyDataset(False, 256)
+
+    return train_data_set, test_data_set
 
 
 if __name__ == '__main__':
