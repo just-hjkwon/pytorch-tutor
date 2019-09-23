@@ -1,3 +1,8 @@
+import functools
+
+
+print = functools.partial(print, flush=True)
+
 
 def main():
     print('Hello!')
