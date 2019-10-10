@@ -112,8 +112,8 @@ class Tutor:
         self.best_error = train_state['best_acer']
         self.epoch = train_state['epoch']
 
-    def start_new_epoch(self):
-        self.epoch += 1
+    def set_epoch(self, epoch):
+        self.epoch = epoch
 
     def end_epoch(self, validation_loss):
         self.scheduler.step(validation_loss)
