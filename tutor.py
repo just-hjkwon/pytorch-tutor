@@ -36,7 +36,7 @@ class Tutor:
             if name[-9:] == "conv.bias":
                 target_parameters.append({"params": param, 'lr': self.learning_rate * 2.0, 'weight_decay': 0.0})
             else:
-                target_parameters.append({"params": param, 'lr': self.learning_rate, 'weight_decay': weight_decay})
+                target_parameters.append({"params": param, 'lr': self.learning_rate, 'weight_decay': self.weight_decay})
 
         return target_parameters
 
