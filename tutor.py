@@ -58,3 +58,16 @@ class Tutor:
         self.optimizer.step()
 
         return loss.data
+
+    def validate(self, input, target):
+        if self.model.training is True:
+            self.model.eval()
+
+        if self.use_cuda is True:
+            input = input.cuda()
+            target = target.cuda()
+
+        prediction = self.model(input)
+        loss = self.model.criticize(prediction, target)
+
+        return loss.data, prediction.data
