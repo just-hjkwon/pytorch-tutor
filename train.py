@@ -2,6 +2,9 @@ import functools
 import os
 
 from dummy_dataset import DummyDataset
+from dummy_model import DummyModel
+
+import torch
 
 
 print = functools.partial(print, flush=True)
@@ -31,6 +34,14 @@ def main():
     max_epoch = 20190923
 
     train_data_set, val_data_set = prepare_data_sets()
+
+    model = DummyModel()
+
+    if use_cuda is True:
+        if gpu_count > 1:
+            model = torch.nn.DataParallel(model).cuda()
+        else:
+            model = model.cuda()
 
 
 def prepare_data_sets():
