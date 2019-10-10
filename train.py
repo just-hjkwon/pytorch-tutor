@@ -36,13 +36,7 @@ def main():
 
     train_data_set, val_data_set = prepare_data_sets()
 
-    model = DummyModel()
-
-    if use_cuda is True:
-        if gpu_count > 1:
-            model = torch.nn.DataParallel(model).cuda()
-        else:
-            model = model.cuda()
+    model = create_model()
 
     tutor = Tutor(model=model, learning_rate=learning_rate, weight_decay=weight_decay, use_cuda=use_cuda)
 
@@ -52,6 +46,18 @@ def prepare_data_sets():
     test_data_set = DummyDataset(False, 256)
 
     return train_data_set, test_data_set
+
+
+def create_model():
+    model = DummyModel()
+
+    if use_cuda is True:
+        if gpu_count > 1:
+            model = torch.nn.DataParallel(model).cuda()
+        else:
+            model = model.cuda()
+
+    return model
 
 
 if __name__ == '__main__':
