@@ -132,5 +132,5 @@ class Tutor:
 
         return state_string
 
-    def epoch(self):
+    def get_epoch(self):
         return self.epoch
