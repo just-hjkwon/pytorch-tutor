@@ -36,3 +36,25 @@ class Tutor:
                 target_parameters.append({"params": param, 'lr': self.learning_rate, 'weight_decay': weight_decay})
 
         return target_parameters
+
+    def train(self, input, target):
+        if self.model.training is not True:
+            self.model.train()
+
+        if self.use_cuda is True:
+            input = input.cuda()
+            target = target.cuda()
+
+        input = Variable(input)
+        target = Variable(target)
+
+        self.optimizer.zero_grad()
+
+        prediction = self.model(input)
+
+        loss = self.model.criticize(prediction, target)
+        loss.backward()
+
+        self.optimizer.step()
+
+        return loss.data
