@@ -10,7 +10,7 @@ from torch.autograd import Variable
 
 class Tutor:
     def __init__(self, model, learning_rate=0.05, weight_decay=0.0005, use_cuda=True):
-        assert(issubclass(model, nn.Module))
+        assert(issubclass(type(model), nn.Module))
 
         self.model = model
         self.learning_rate = learning_rate
