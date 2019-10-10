@@ -1,10 +1,11 @@
 import functools
 import os
 
+import torch
+
 from dummy_dataset import DummyDataset
 from dummy_model import DummyModel
-
-import torch
+from tutor import Tutor
 
 
 print = functools.partial(print, flush=True)
@@ -42,6 +43,8 @@ def main():
             model = torch.nn.DataParallel(model).cuda()
         else:
             model = model.cuda()
+
+    tutor = Tutor(model=model, learning_rate=learning_rate, weight_decay=weight_decay, use_cuda=use_cuda)
 
 
 def prepare_data_sets():
