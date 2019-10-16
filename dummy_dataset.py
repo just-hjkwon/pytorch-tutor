@@ -16,6 +16,6 @@ class DummyDataset(Dataset):
         input = np.random.rand(3, 100, 100).astype(dtype=np.float32)
         input = torch.from_numpy(input)
 
-        label = np.random.random_integers(0, 2)
+        label = np.random.random_integers(0, 1)
 
         return input, label
