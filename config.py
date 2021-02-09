@@ -5,6 +5,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 from dummy_dataset import DummyDataset
 from dummy_model import DummyModel
+from tutor import Tutor
 
 tensorboard_log_directory = "./logs"
 
@@ -68,3 +69,7 @@ def create_tensorboard_writer(purge_step=None):
     writer = SummaryWriter(log_dir=tensorboard_log_directory, flush_secs=10, purge_step=purge_step)
 
     return writer
+
+
+def write_extra_tensorboard_log(writer: SummaryWriter, tutor: Tutor):
+    pass

@@ -40,6 +40,8 @@ def main():
         current_learning_rate = tutor.get_current_learning_rate()
         writer.add_scalar("Learning/Learning rate", validation_loss, epoch)
 
+        config.write_extra_tensorboard_log(writer, tutor)
+
         tutor.end_epoch(validation_loss)
 
         if error <= tutor.best_error:
