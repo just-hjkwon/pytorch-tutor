@@ -38,7 +38,7 @@ def main():
         writer.add_scalar("Learning/Validation loss", validation_loss, epoch)
 
         current_learning_rate = tutor.get_current_learning_rate()
-        writer.add_scalar("Learning/Learning rate", validation_loss, epoch)
+        writer.add_scalar("Learning/Learning rate", current_learning_rate, epoch)
 
         config.write_extra_tensorboard_log(writer, epoch, tutor)
 
