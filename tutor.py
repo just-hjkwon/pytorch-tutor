@@ -109,7 +109,7 @@ class Tutor:
         filename = os.path.join(self.snapshot_directory, "%s.state" % prefix)
         train_state = torch.load(filename)
 
-        self.best_error = train_state['best_acer']
+        self.best_error = train_state['best_error']
         self.epoch = train_state['epoch']
 
     def set_epoch(self, epoch):
