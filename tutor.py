@@ -24,7 +24,7 @@ class Tutor:
 
         self.snapshot_directory = "snapshots"
 
-        self.best_error = 1.0
+        self.best_error = torch.finfo(torch.float32).max
         self.epoch = 0
 
     def make_optimizing_target_parameters(self):
