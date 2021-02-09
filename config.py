@@ -66,8 +66,10 @@ def create_logger():
 
 
 def create_tensorboard_writer(purge_step=None):
-    writer = SummaryWriter(log_dir=tensorboard_log_directory, flush_secs=10, purge_step=purge_step)
-
+    current_directory_name = os.path.split(os.path.dirname(os.path.realpath(__file__)))[-1]
+    log_dir = os.path.join(tensorboard_log_directory, current_directory_name)
+    writer = SummaryWriter(log_dir=log_dir, flush_secs=10, purge_step=purge_step)
+    
     return writer
 
 
