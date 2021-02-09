@@ -44,11 +44,8 @@ class Tutor:
         if self.model.training is not True:
             self.model.train()
 
-        input = input.to(self.model_device)
-        target = target.to(self.model_device)
-
-        input = Variable(input)
-        target = Variable(target)
+        input = self.to_device(input)
+        target = self.to_device(target)
 
         self.optimizer.zero_grad()
 
@@ -65,8 +62,8 @@ class Tutor:
         if self.model.training is True:
             self.model.eval()
 
-        input = input.to(self.model_device)
-        target = target.to(self.model_device)
+        input = self.to_device(input)
+        target = self.to_device(target)
 
         prediction = self.model(input)
         loss = self.model.criticize(prediction, target)
@@ -132,3 +129,12 @@ class Tutor:
 
     def get_epoch(self):
         return self.epoch
+
+    def to_device(self, tensor):
+        if type(tensor) == list:
+            tensor = [t.to(self.model_device) for t in tensor]
+        else:
+            tensor = tensor.to(self.model_device)
+
+        return tensor
+
