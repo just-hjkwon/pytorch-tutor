@@ -1,4 +1,3 @@
-import functools
 import time
 
 import torch
@@ -7,7 +6,7 @@ import tqdm
 import config
 from tutor import Tutor
 
-print = functools.partial(print, flush=True)
+log = config.create_logger()
 
 
 def main():
@@ -41,9 +40,8 @@ def main():
             tutor.save('best')
             tutor.save('best_at_epoch_%04d' % epoch)
 
-            time_string = get_time_string()
-            phase_string = '%s Save snapshot of best ACER (%.4f)' % (time_string, tutor.best_error)
-            print(phase_string)
+            log_string = 'Save snapshot of best ACER (%.4f)' % (tutor.best_error)
+            log.info(log_string)
 
         tutor.save('latest')
 
@@ -54,21 +52,20 @@ def train_a_epoch(tutor, data_set):
     data_loader = torch.utils.data.DataLoader(data_set, batch_size=config.batch_size, shuffle=False,
                                               **config.cuda_kwargs)
 
-    time_string = get_time_string()
-
     current_epoch = tutor.get_epoch()
     current_learning_rate = tutor.get_current_learning_rate()
 
     scheduler_string = tutor.make_scheduler_state_string()
 
-    phase_string = '%s Train | Epoch %d, learning rate: %f, %s' % (
-        time_string, current_epoch, current_learning_rate, scheduler_string)
-    print(phase_string)
+    log_string = 'Train | Epoch %d, learning rate: %f, %s' % (
+        current_epoch, current_learning_rate, scheduler_string)
+
+    log.info(log_string)
 
     epoch_loss = 0.0
     trained_count = 0
 
-    description = get_time_string()
+    description = get_time_string() + " TQDM]"
     epoch_bar = tqdm.tqdm(data_loader, desc=description)
 
     for batch_idx, (data, target) in enumerate(epoch_bar):
@@ -77,17 +74,17 @@ def train_a_epoch(tutor, data_set):
         trained_count += len(data)
         epoch_loss += loss * len(data)
 
-        time_string = get_time_string()
         average_loss = epoch_loss / trained_count
 
-        description = "%s Train | Epoch %d, Average train loss: %f (batch: %f)" % (
+        time_string = get_time_string()
+        description = "%s TQDM] Train | Epoch %d, Average train loss: %f (batch: %f)" % (
             time_string, current_epoch, average_loss, loss)
         epoch_bar.set_description(description)
 
     average_loss = epoch_loss / trained_count
-    time_string = get_time_string()
-    description = "%s Train | Epoch %d, Average train loss: %f" % (time_string, current_epoch, average_loss)
-    print(description)
+
+    description = "Train | Epoch %d, Average train loss: %f" % (current_epoch, average_loss)
+    log.info(description)
 
 
 def validate(tutor, data_set):
@@ -96,18 +93,16 @@ def validate(tutor, data_set):
     data_loader = torch.utils.data.DataLoader(data_set, batch_size=config.batch_size, shuffle=False,
                                               **config.cuda_kwargs)
 
-    time_string = get_time_string()
-
     current_epoch = tutor.get_epoch()
     current_learning_rate = tutor.get_current_learning_rate()
 
-    phase_string = '%s Valid.| Epoch %d, learning rate: %f' % (time_string, current_epoch, current_learning_rate)
-    print(phase_string)
+    log_string = 'Valid.| Epoch %d, learning rate: %f' % (current_epoch, current_learning_rate)
+    log.info(log_string)
 
     validation_loss = 0.0
     validated_count = 0
 
-    description = get_time_string()
+    description = get_time_string() + " TQDM]"
     epoch_bar = tqdm.tqdm(data_loader, desc=description)
 
     for batch_idx, (input, target) in enumerate(epoch_bar):
@@ -118,15 +113,14 @@ def validate(tutor, data_set):
         average_loss = validation_loss / validated_count
 
         time_string = get_time_string()
-        description = "%s Valid.| Epoch %d, Average validation loss: %f (batch: %f)" % (
+        description = "%s TQDM] Valid.| Epoch %d, Average validation loss: %f (batch: %f)" % (
             time_string, current_epoch, average_loss, loss)
         epoch_bar.set_description(description)
 
     average_loss = validation_loss / validated_count
 
-    time_string = get_time_string()
-    description = "%s Valid.| Epoch %d, Average validation loss: %f" % (time_string, current_epoch, average_loss)
-    print(description)
+    description = "Valid.| Epoch %d, Average validation loss: %f" % (current_epoch, average_loss)
+    log.info(description)
 
     error = validation_loss
 

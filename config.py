@@ -1,7 +1,8 @@
+import logging
 import os
 
-from dummy_model import DummyModel
 from dummy_dataset import DummyDataset
+from dummy_model import DummyModel
 
 gpu = "0"
 gpu_count = len(gpu.split(','))
@@ -42,3 +43,18 @@ def create_data_sets():
     test_data_set = DummyDataset(False, 256)
 
     return train_data_set, test_data_set
+
+
+def create_logger():
+    logger = logging.getLogger('tutor')
+    logger.setLevel(logging.INFO)
+
+    formatter = logging.Formatter('%(asctime)s %(levelname)s] %(message)s', datefmt='%Y-%m-%d,%H:%M:%S')
+
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.INFO)
+    stream_handler.setFormatter(formatter)
+
+    logger.addHandler(stream_handler)
+
+    return logger
