@@ -62,11 +62,12 @@ class Tutor:
         if self.model.training is True:
             self.model.eval()
 
-        input = self.to_device(input)
-        target = self.to_device(target)
+        with torch.no_grad():
+            input = self.to_device(input)
+            target = self.to_device(target)
 
-        prediction = self.model(input)
-        loss = self.model.criticize(prediction, target)
+            prediction = self.model(input)
+            loss = self.model.criticize(prediction, target)
 
         return loss.data, prediction.data
 
