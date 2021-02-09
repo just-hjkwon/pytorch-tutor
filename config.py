@@ -69,9 +69,9 @@ def create_tensorboard_writer(purge_step=None):
     current_directory_name = os.path.split(os.path.dirname(os.path.realpath(__file__)))[-1]
     log_dir = os.path.join(tensorboard_log_directory, current_directory_name)
     writer = SummaryWriter(log_dir=log_dir, flush_secs=10, purge_step=purge_step)
-    
+
     return writer
 
 
-def write_extra_tensorboard_log(writer: SummaryWriter, tutor: Tutor):
+def write_extra_tensorboard_log(writer: SummaryWriter, epoch: int, tutor: Tutor):
     pass
