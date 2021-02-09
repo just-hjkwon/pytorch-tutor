@@ -9,13 +9,13 @@ from torch.autograd import Variable
 
 
 class Tutor:
-    def __init__(self, model, learning_rate=0.05, weight_decay=0.0005, use_cuda=True):
+    def __init__(self, model, learning_rate=0.05, weight_decay=0.0005):
         assert(issubclass(type(model), nn.Module))
 
         self.model = model
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
-        self.use_cuda = use_cuda
+        self.model_device = next(model.parameters()).device
 
         target_parameters = self.make_optimizing_target_parameters()
 
@@ -44,9 +44,8 @@ class Tutor:
         if self.model.training is not True:
             self.model.train()
 
-        if self.use_cuda is True:
-            input = input.cuda()
-            target = target.cuda()
+        input = input.to(self.model_device)
+        target = target.to(self.model_device)
 
         input = Variable(input)
         target = Variable(target)
@@ -66,9 +65,8 @@ class Tutor:
         if self.model.training is True:
             self.model.eval()
 
-        if self.use_cuda is True:
-            input = input.cuda()
-            target = target.cuda()
+        input = input.to(self.model_device)
+        target = target.to(self.model_device)
 
         prediction = self.model(input)
         loss = self.model.criticize(prediction, target)

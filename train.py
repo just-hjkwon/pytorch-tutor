@@ -39,7 +39,7 @@ def main():
     train_data_set, val_data_set = prepare_data_sets()
 
     model = create_model()
-    tutor = Tutor(model=model, learning_rate=learning_rate, weight_decay=weight_decay, use_cuda=use_cuda)
+    tutor = Tutor(model=model, learning_rate=learning_rate, weight_decay=weight_decay)
 
     if load_snapshot is not None:
         tutor.load(load_snapshot)
