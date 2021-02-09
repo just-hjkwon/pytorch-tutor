@@ -1,14 +1,11 @@
 import functools
-import os
 import time
 
 import torch
 import tqdm
 
-from tutor import Tutor
-
 import config
-
+from tutor import Tutor
 
 print = functools.partial(print, flush=True)
 
@@ -51,16 +48,11 @@ def main():
         tutor.save('latest')
 
 
-
-
-
-
-
-
 def train_a_epoch(tutor, data_set):
-    assert(isinstance(tutor, Tutor))
+    assert (isinstance(tutor, Tutor))
 
-    data_loader = torch.utils.data.DataLoader(data_set, batch_size=config.batch_size, shuffle=False, **config.cuda_kwargs)
+    data_loader = torch.utils.data.DataLoader(data_set, batch_size=config.batch_size, shuffle=False,
+                                              **config.cuda_kwargs)
 
     time_string = get_time_string()
 
@@ -99,9 +91,10 @@ def train_a_epoch(tutor, data_set):
 
 
 def validate(tutor, data_set):
-    assert(isinstance(tutor, Tutor))
+    assert (isinstance(tutor, Tutor))
 
-    data_loader = torch.utils.data.DataLoader(data_set, batch_size=config.batch_size, shuffle=False, **config.cuda_kwargs)
+    data_loader = torch.utils.data.DataLoader(data_set, batch_size=config.batch_size, shuffle=False,
+                                              **config.cuda_kwargs)
 
     time_string = get_time_string()
 

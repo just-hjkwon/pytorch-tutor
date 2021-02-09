@@ -5,12 +5,10 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.optim.lr_scheduler as lr_scheduler
 
-from torch.autograd import Variable
-
 
 class Tutor:
     def __init__(self, model, learning_rate=0.05, weight_decay=0.0005):
-        assert(issubclass(type(model), nn.Module))
+        assert (issubclass(type(model), nn.Module))
 
         self.model = model
         self.learning_rate = learning_rate
@@ -20,7 +18,7 @@ class Tutor:
         target_parameters = self.make_optimizing_target_parameters()
 
         self.optimizer = optim.Adam(target_parameters, lr=learning_rate, weight_decay=weight_decay)
-        self.scheduler = lr_scheduler.ReduceLROnPlateau(self.optimizer, 'min', factor=(2.0/3.0), patience=15)
+        self.scheduler = lr_scheduler.ReduceLROnPlateau(self.optimizer, 'min', factor=(2.0 / 3.0), patience=15)
 
         self.snapshot_directory = "snapshots"
 
@@ -138,4 +136,3 @@ class Tutor:
             tensor = tensor.to(self.model_device)
 
         return tensor
-
