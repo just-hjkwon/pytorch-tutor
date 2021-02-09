@@ -5,41 +5,24 @@ import time
 import torch
 import tqdm
 
-from dummy_dataset import DummyDataset
-from dummy_model import DummyModel
 from tutor import Tutor
+
+import config
 
 
 print = functools.partial(print, flush=True)
 
-gpu = "0"
-gpu_count = len(gpu.split(','))
-
-learning_rate= 0.001
-weight_decay = 0.0001
-
-batch_size = 2
-num_workers = 1
-
-load_snapshot = None
-
-use_cuda = True
-
-if use_cuda:
-    kwargs = {'num_workers': num_workers, 'pin_memory': True}
-    os.environ['CUDA_VISIBLE_DEVICES'] = gpu
-else:
-    kwargs = {}
-
 
 def main():
     init_epoch = 0
-    max_epoch = 20190923
+    max_epoch = config.max_epoch
 
-    train_data_set, val_data_set = prepare_data_sets()
+    train_data_set, val_data_set = config.create_data_sets()
+    model = config.create_model()
 
-    model = create_model()
-    tutor = Tutor(model=model, learning_rate=learning_rate, weight_decay=weight_decay)
+    tutor = Tutor(model=model, learning_rate=config.learning_rate, weight_decay=config.weight_decay)
+
+    load_snapshot = config.load_snapshot
 
     if load_snapshot is not None:
         tutor.load(load_snapshot)
@@ -68,29 +51,16 @@ def main():
         tutor.save('latest')
 
 
-def prepare_data_sets():
-    train_data_set = DummyDataset(True, 256)
-    test_data_set = DummyDataset(False, 256)
-
-    return train_data_set, test_data_set
 
 
-def create_model():
-    model = DummyModel()
 
-    if use_cuda is True:
-        if gpu_count > 1:
-            model = torch.nn.DataParallel(model).cuda()
-        else:
-            model = model.cuda()
 
-    return model
 
 
 def train_a_epoch(tutor, data_set):
     assert(isinstance(tutor, Tutor))
 
-    data_loader = torch.utils.data.DataLoader(data_set, batch_size=batch_size, shuffle=False, **kwargs)
+    data_loader = torch.utils.data.DataLoader(data_set, batch_size=config.batch_size, shuffle=False, **config.cuda_kwargs)
 
     time_string = get_time_string()
 
@@ -131,7 +101,7 @@ def train_a_epoch(tutor, data_set):
 def validate(tutor, data_set):
     assert(isinstance(tutor, Tutor))
 
-    data_loader = torch.utils.data.DataLoader(data_set, batch_size=batch_size, shuffle=False, **kwargs)
+    data_loader = torch.utils.data.DataLoader(data_set, batch_size=config.batch_size, shuffle=False, **config.cuda_kwargs)
 
     time_string = get_time_string()
 
