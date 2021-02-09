@@ -1,8 +1,12 @@
 import logging
 import os
 
+from torch.utils.tensorboard import SummaryWriter
+
 from dummy_dataset import DummyDataset
 from dummy_model import DummyModel
+
+tensorboard_log_directory = "./logs"
 
 gpu = "0"
 gpu_count = len(gpu.split(','))
@@ -58,3 +62,9 @@ def create_logger():
     logger.addHandler(stream_handler)
 
     return logger
+
+
+def create_tensorboard_writer(purge_step=None):
+    writer = SummaryWriter(log_dir=tensorboard_log_directory, flush_secs=10, purge_step=purge_step)
+
+    return writer

@@ -26,12 +26,19 @@ def main():
 
         init_epoch = tutor.get_epoch() + 1
 
+    writer = config.create_tensorboard_writer(purge_step=init_epoch)
+
     for epoch in range(init_epoch, max_epoch):
         tutor.set_epoch(epoch)
 
-        train_a_epoch(tutor, train_data_set)
+        train_loss = train_a_epoch(tutor, train_data_set)
+        writer.add_scalar("Learning/Train loss", train_loss, epoch)
 
         validation_loss, error = validate(tutor, val_data_set)
+        writer.add_scalar("Learning/Validation loss", validation_loss, epoch)
+
+        current_learning_rate = tutor.get_current_learning_rate()
+        writer.add_scalar("Learning/Learning rate", validation_loss, epoch)
 
         tutor.end_epoch(validation_loss)
 
@@ -85,6 +92,8 @@ def train_a_epoch(tutor, data_set):
 
     description = "Train | Epoch %d, Average train loss: %f" % (current_epoch, average_loss)
     log.info(description)
+
+    return average_loss
 
 
 def validate(tutor, data_set):
