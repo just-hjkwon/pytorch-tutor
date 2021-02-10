@@ -66,8 +66,12 @@ class Tutor:
 
             prediction = self.model(input)
             loss = self.model.criticize(prediction, target)
+            evaluations = self.model.evaluate(prediction, target)
 
-        return loss.data, prediction.data
+        return loss.data, prediction.data, evaluations
+
+    def compute_error(self, evaluations):
+        return self.model.compute_error(evaluations)
 
     def save(self, prefix):
         if not os.path.exists(self.snapshot_directory):
@@ -125,6 +129,12 @@ class Tutor:
             self.best_error, self.scheduler.best, self.scheduler.num_bad_epochs, self.scheduler.patience)
 
         return state_string
+
+    def average_evaluation(self, evaluations):
+        return self.model.average_evaluation(evaluations)
+
+    def make_evaluation_result_string(self, evaluation):
+        return self.model.make_evaluation_result_string(evaluation)
 
     def get_epoch(self):
         return self.epoch
