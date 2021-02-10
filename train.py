@@ -34,13 +34,13 @@ def main():
         train_loss = train_a_epoch(tutor, train_data_set)
         writer.add_scalar("Learning/Train loss", train_loss, epoch)
 
-        validation_loss, error = validate(tutor, val_data_set)
+        validation_loss, error, average_evaluation = validate(tutor, val_data_set)
         writer.add_scalar("Learning/Validation loss", validation_loss, epoch)
 
         current_learning_rate = tutor.get_current_learning_rate()
         writer.add_scalar("Learning/Learning rate", current_learning_rate, epoch)
 
-        config.write_extra_tensorboard_log(writer, epoch, tutor)
+        config.write_extra_tensorboard_log(writer, epoch, tutor, average_evaluation)
 
         tutor.end_epoch(validation_loss)
 
@@ -49,7 +49,7 @@ def main():
             tutor.save('best')
             tutor.save('best_at_epoch_%04d' % epoch)
 
-            log_string = 'Save snapshot of best error (%.4f)' % (tutor.best_error)
+            log_string = 'Save snapshot of best ERROR (%.4f)' % (tutor.best_error)
             log.info(log_string)
 
         tutor.save('latest')
@@ -116,12 +116,14 @@ def validate(tutor, data_set):
     description = get_time_string() + " TQDM]"
     epoch_bar = tqdm.tqdm(data_loader, desc=description)
 
+    evaluations = []
     for batch_idx, (input, target) in enumerate(epoch_bar):
-        loss, output = tutor.validate(input, target)
+        loss, output, evaluation = tutor.validate(input, target)
 
         validated_count += len(input)
         validation_loss += loss * len(input)
         average_loss = validation_loss / validated_count
+        evaluations += evaluation
 
         time_string = get_time_string()
         description = "%s TQDM] Valid.| Epoch %d, Average validation loss: %f (batch: %f)" % (
@@ -133,9 +135,13 @@ def validate(tutor, data_set):
     description = "Valid.| Epoch %d, Average validation loss: %f" % (current_epoch, average_loss)
     log.info(description)
 
-    error = validation_loss
+    average_evaluation = tutor.average_evaluation(evaluations)
+    evaluation_result = tutor.make_evaluation_result_string(average_evaluation)
+    log.info("Average " + evaluation_result)
 
-    return average_loss, error
+    error = tutor.compute_error(evaluations)
+
+    return average_loss, error, average_evaluation
 
 
 def get_time_string():

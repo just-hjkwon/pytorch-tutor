@@ -73,5 +73,6 @@ def create_tensorboard_writer(purge_step=None):
     return writer
 
 
-def write_extra_tensorboard_log(writer: SummaryWriter, epoch: int, tutor: Tutor):
-    pass
+def write_extra_tensorboard_log(writer: SummaryWriter, epoch: int, tutor: Tutor, average_evalaution):
+    correct_ratio = average_evalaution['correct_count'] / average_evalaution['total_count']
+    writer.add_scalar("Evaluation/correct ratio", correct_ratio, epoch)
