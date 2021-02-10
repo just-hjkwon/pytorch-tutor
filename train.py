@@ -49,7 +49,7 @@ def main():
             tutor.save('best')
             tutor.save('best_at_epoch_%04d' % epoch)
 
-            log_string = 'Save snapshot of best ACER (%.4f)' % (tutor.best_error)
+            log_string = 'Save snapshot of best error (%.4f)' % (tutor.best_error)
             log.info(log_string)
 
         tutor.save('latest')
