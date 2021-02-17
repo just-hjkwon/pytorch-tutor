@@ -58,7 +58,7 @@ def main():
 def train_a_epoch(tutor, data_set):
     assert (isinstance(tutor, Tutor))
 
-    data_loader = torch.utils.data.DataLoader(data_set, batch_size=config.batch_size, shuffle=False,
+    data_loader = torch.utils.data.DataLoader(data_set, batch_size=config.batch_size, shuffle=True,
                                               **config.cuda_kwargs)
 
     current_epoch = tutor.get_epoch()
