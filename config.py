@@ -18,7 +18,7 @@ learning_rate = 0.001
 weight_decay = 0.0001
 
 batch_size = 2
-num_workers = 1
+num_workers = 0
 
 load_snapshot = None
 
